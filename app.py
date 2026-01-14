@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 import re
 import torch
 import torch.nn as nn
@@ -11,9 +10,9 @@ from torch.utils.data import DataLoader
 # ==========================================
 # Make sure you renamed the files to: NaiveBayesWSD.py, KNNWSD.py, LSTMWSD.py
 try:
-    from NaiveBayesWSD import NaiveBayesWSD
-    from KNNWSD import KNNWSD_Model
-    from LSTMWSD import LSTMWSD, WSDDataset
+    from NaivesBayes import NaiveBayesWSD
+    from kNN import KNNWSD
+    from LSTM import LSTMWSD, WSDDataset
 except ImportError as e:
     st.error(f"Import Error: {e}. Did you rename the files to remove spaces?")
     st.stop()
@@ -24,7 +23,7 @@ except ImportError as e:
 # ==========================================
 def clean_text(text):
     """Removes tags."""
-    text = re.sub(r'\', '', text)
+    text = re.sub(r'\'', '', text)
     return text.strip()
 
 
@@ -64,7 +63,7 @@ def get_knn(word):
     marked_sentences = [s.replace(word, f"<target> {word} </target>") for s in sentences]
 
     # Initialize from your imported file
-    model = KNNWSD_Model(k=5)
+    model = KNNWSD(k=5)
     model.train(marked_sentences, senses)
     return model
 
